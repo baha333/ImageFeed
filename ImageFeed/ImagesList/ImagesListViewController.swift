@@ -4,7 +4,6 @@
 //
 //  Created by Bakhadir on 08.11.2023.
 //
-
 import UIKit
 
 class ImagesListViewController: UIViewController {
