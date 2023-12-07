@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		AC51C2682B13819F0059927F /* ImagesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC51C2672B13819F0059927F /* ImagesListCell.swift */; };
 		AC51C26D2B1640140059927F /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC51C26C2B1640140059927F /* ProfileViewController.swift */; };
+		AC51C2702B21AC7F0059927F /* SingleImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC51C26F2B21AC7F0059927F /* SingleImageViewController.swift */; };
 		ACD86ADC2AFC214A00A08E87 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACD86ADB2AFC214A00A08E87 /* AppDelegate.swift */; };
 		ACD86ADE2AFC214A00A08E87 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACD86ADD2AFC214A00A08E87 /* SceneDelegate.swift */; };
 		ACD86AE02AFC214A00A08E87 /* ImagesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACD86ADF2AFC214A00A08E87 /* ImagesListViewController.swift */; };
@@ -20,6 +21,7 @@
 /* Begin PBXFileReference section */
 		AC51C2672B13819F0059927F /* ImagesListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListCell.swift; sourceTree = "<group>"; };
 		AC51C26C2B1640140059927F /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		AC51C26F2B21AC7F0059927F /* SingleImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleImageViewController.swift; sourceTree = "<group>"; };
 		ACD86AD82AFC214A00A08E87 /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ACD86ADB2AFC214A00A08E87 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		ACD86ADD2AFC214A00A08E87 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -58,6 +60,14 @@
 			path = Profile;
 			sourceTree = "<group>";
 		};
+		AC51C2712B21B8C50059927F /* SingleImageView */ = {
+			isa = PBXGroup;
+			children = (
+				AC51C26F2B21AC7F0059927F /* SingleImageViewController.swift */,
+			);
+			path = SingleImageView;
+			sourceTree = "<group>";
+		};
 		ACD86ACF2AFC214A00A08E87 = {
 			isa = PBXGroup;
 			children = (
@@ -77,6 +87,7 @@
 		ACD86ADA2AFC214A00A08E87 /* ImageFeed */ = {
 			isa = PBXGroup;
 			children = (
+				AC51C2712B21B8C50059927F /* SingleImageView */,
 				AC51C26B2B163FE50059927F /* Profile */,
 				AC51C26A2B13820E0059927F /* ImagesList */,
 				ACD86ADB2AFC214A00A08E87 /* AppDelegate.swift */,
@@ -161,6 +172,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				ACD86AE02AFC214A00A08E87 /* ImagesListViewController.swift in Sources */,
+				AC51C2702B21AC7F0059927F /* SingleImageViewController.swift in Sources */,
 				AC51C2682B13819F0059927F /* ImagesListCell.swift in Sources */,
 				AC51C26D2B1640140059927F /* ProfileViewController.swift in Sources */,
 				ACD86ADC2AFC214A00A08E87 /* AppDelegate.swift in Sources */,
