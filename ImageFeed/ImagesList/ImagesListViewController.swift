@@ -4,7 +4,6 @@
 //
 //  Created by Bakhadir on 08.11.2023.
 //
-
 import UIKit
 
 class ImagesListViewController: UIViewController {
@@ -54,7 +53,7 @@ extension ImagesListViewController {
         cell.dateLabel.text = dateFormatter.string(from: Date())
         
         let isLiked = indexPath.row % 2 == 0
-        let likeImage = isLiked ? UIImage(named: "activeLikeButton") : UIImage(named: "noActiveLikeButton")
+        let likeImage = isLiked ? UIImage(named: "like_button_on") : UIImage(named: "like_button_off")
         cell.likeButton.setImage(likeImage, for: .normal)
     }
 }
