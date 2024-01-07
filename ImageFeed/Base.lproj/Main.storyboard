@@ -10,6 +10,23 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--Item-->
+        <scene sceneID="cmp-T8-eY0">
+            <objects>
+                <navigationController id="EuY-0L-IKo" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" id="ruM-Rc-GbR"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="hhd-aD-Q3L">
+                        <rect key="frame" x="0.0" y="48" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="2k6-3u-ce0"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pQH-dZ-Dwh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2429" y="1562"/>
+        </scene>
         <!--ImageList-->
         <scene sceneID="tne-QT-ifu">
             <objects>
@@ -96,7 +113,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2372" y="1553"/>
+            <point key="canvasLocation" x="-1632" y="1553"/>
         </scene>
         <!--Single Image View Controller-->
         <scene sceneID="pzI-Wx-4hz">
@@ -167,12 +184,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ms3-G2-Whh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1568" y="1553"/>
+            <point key="canvasLocation" x="-810" y="1553"/>
         </scene>
-        <!--Unsplash Scene-->
+        <!--SpalshViewController-->
         <scene sceneID="xfy-hx-sBf">
             <objects>
-                <viewController id="MiM-Wo-wOT" userLabel="Unsplash Scene" customClass="SplashViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="MiM-Wo-wOT" userLabel="SpalshViewController" customClass="SplashViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="1cg-EB-2mm">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -224,8 +241,8 @@
                         <color key="selectedImageTintColor" name="YP White"/>
                     </tabBar>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="H5L-4V-dZc"/>
                         <segue destination="dE6-yL-tjN" kind="relationship" relationship="viewControllers" id="jQp-eM-kVY"/>
+                        <segue destination="EuY-0L-IKo" kind="relationship" relationship="viewControllers" id="BTJ-c4-38J"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="n2y-4a-aUe" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
