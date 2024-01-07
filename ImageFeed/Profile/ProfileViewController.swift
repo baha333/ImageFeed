@@ -15,10 +15,12 @@ final class ProfileViewController: UIViewController {
         screenUI()
     }
     private func screenUI() {
+        // MARK: - UIImageView
         let avatarImageView = UIImageView()
         view.addSubview(avatarImageView)
         avatarImageView.image = UIImage(named: "photo")
         
+        // MARK: - UIButton
         let logoutButton = UIButton.systemButton(
             with: UIImage(named: "logout_button")!,
             target: self,
@@ -27,18 +29,21 @@ final class ProfileViewController: UIViewController {
         view.addSubview(logoutButton)
         logoutButton.tintColor = .red
         
+        // MARK: - nameLabel
         let nameLabel = UILabel()
         view.addSubview(nameLabel)
         nameLabel.text = "Екатерина Новикова"
         nameLabel.textColor = .white
         nameLabel.font = UIFont.boldSystemFont(ofSize: 23)
         
+        // MARK: - loginNameLabel
         let loginNameLabel = UILabel()
         view.addSubview(loginNameLabel)
         loginNameLabel.text = "@ekaterina_nov"
         loginNameLabel.textColor = .gray
         loginNameLabel.font = UIFont.systemFont(ofSize: 13)
         
+        // MARK: - descriptionLabel
         let descriptionLabel = UILabel()
         view.addSubview(descriptionLabel)
         descriptionLabel.text = "Hello, world!"
@@ -49,6 +54,7 @@ final class ProfileViewController: UIViewController {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
+        // MARK: - Constraints
         NSLayoutConstraint.activate([
             avatarImageView.widthAnchor.constraint(equalToConstant: 70),
             avatarImageView.heightAnchor.constraint(equalToConstant: 70),

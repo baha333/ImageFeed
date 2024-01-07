@@ -19,7 +19,7 @@ final class SingleImageViewController: UIViewController {
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet private var imageView: UIImageView!
     
-    
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         scrollView.minimumZoomScale = 0.1
@@ -32,11 +32,9 @@ final class SingleImageViewController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func didTabShareButton(_ sender: UIButton) {
-        let share = UIActivityViewController(
-            activityItems: [image],
-            applicationActivities: nil
-        )
+    @IBAction private func didTabShareButton(_ sender: Any) {
+        guard let image else { return }
+        let share = UIActivityViewController(activityItems: [image], applicationActivities: nil)
         present(share, animated: true, completion: nil)
     }
     
