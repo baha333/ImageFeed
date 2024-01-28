@@ -179,8 +179,8 @@
                     </view>
                     <navigationItem key="navigationItem" id="SZK-DZ-AxY"/>
                     <connections>
-                        <outlet property="ImageView" destination="Cx9-SV-kEa" id="AlM-ez-K2C"/>
                         <outlet property="backButton" destination="C1m-2J-Ptc" id="aJv-hB-t5J"/>
+                        <outlet property="imageView" destination="Cx9-SV-kEa" id="qY4-si-TGI"/>
                         <outlet property="scrollView" destination="YPK-oZ-RRg" id="0H0-sd-bP3"/>
                         <outlet property="shareButton" destination="Ojb-SS-CKM" id="2Vc-Al-HNU"/>
                     </connections>

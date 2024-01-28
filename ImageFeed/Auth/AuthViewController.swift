@@ -12,7 +12,7 @@ final class AuthViewController: UIViewController {
     
     weak var delegate: AuthViewControllerDelegate?
     
-    @IBOutlet weak var loginButton: UIButton!
+    @IBOutlet private var loginButton: UIButton!
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier ==  ShowWebViewSegueIdentifier {
