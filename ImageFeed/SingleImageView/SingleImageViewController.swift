@@ -2,7 +2,6 @@
 //  SingleImageViewController.swift
 //  ImageFeed
 //
-//  Created by Bakhadir on 07.12.2023.
 //
 
 import UIKit
@@ -16,27 +15,29 @@ final class SingleImageViewController: UIViewController {
         }
     }
     
-    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet private var scrollView: UIScrollView!
     @IBOutlet private var imageView: UIImageView!
-    
+    @IBOutlet private var backButton: UIButton!
+    @IBOutlet private var shareButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        guard image != nil else { return }
+        imageView.image = image
         scrollView.minimumZoomScale = 0.1
         scrollView.maximumZoomScale = 1.25
-        imageView.image = image
         rescaleAndCenterImageInScrollView(image: image)
     }
     
-    @IBAction private func didTapBackButton() {
+    @IBAction private func didTapBackButton(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func didTabShareButton(_ sender: UIButton) {
+    @IBAction private func didTapShareButton(_ sender: UIButton) {
+        guard let image else { return }
         let share = UIActivityViewController(
             activityItems: [image],
-            applicationActivities: nil
-        )
+            applicationActivities: nil)
         present(share, animated: true, completion: nil)
     }
     
@@ -59,7 +60,7 @@ final class SingleImageViewController: UIViewController {
 }
 
 extension SingleImageViewController: UIScrollViewDelegate {
-    func viewForZooming(in scroolView: UIScrollView) -> UIView? {
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         imageView
     }
 }
