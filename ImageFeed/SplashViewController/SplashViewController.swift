@@ -23,9 +23,21 @@ final class SplashViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if oauth2TokenStorage.token != nil {
-            guard let authToken = oauth2TokenStorage.token else { return }
-            fetchProfile(authToken)
+        if  let token = oauth2TokenStorage.token {
+            fetchProfile(token)
+//            {
+//                [weak self] result in
+//                guard let self else { return }
+//                switch result {
+//                case .success(let profile):
+//                    ProfileImageService.shared.fetchProfileImageURL(username: profile.username ) { _ in }
+//                    switchToTabBarController()
+//                case .failure(let error):
+//                    UIBlockingProgressHUD.dismiss()
+//                    showAlert()
+//                    print("\(error)")
+//                }
+//            }
         } else {
             showAuthViewController()
         }
@@ -55,9 +67,9 @@ extension SplashViewController: AuthViewControllerDelegate {
     
     
     func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
+        UIBlockingProgressHUD.show()
         dismiss(animated: true) { [weak self] in
             guard let self = self else { return }
-            UIBlockingProgressHUD.show()
             fetchOAuthToken(code)
         }
     }
@@ -94,10 +106,11 @@ extension SplashViewController: AuthViewControllerDelegate {
             case .success:
                 guard let username = self.profileService.profile?.username else { return }
                 self.profileImageService.fetchProfileImageURL(username: username) { _ in }
-                self.switchToTabBarController()
+                DispatchQueue.main.async {
+                    self.switchToTabBarController()
+                }
             case .failure:
                 self.showAlert()
-                break
             }
             UIBlockingProgressHUD.dismiss()
         }

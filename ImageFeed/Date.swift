@@ -7,12 +7,15 @@
 
 import Foundation
 
-private let dateFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateFormat = "d MMMM yyyy"
-    return formatter
-}()
-
-extension Date {
-    var dateTimeString: String { dateFormatter.string(from: self)}
+final class CustomDateFormatters {
+    static let shared = CustomDateFormatters()
+    
+    let iso8601DateFormatter: ISO8601DateFormatter
+    let dateFormatter: DateFormatter
+    private init() {
+        iso8601DateFormatter = ISO8601DateFormatter()
+        dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "ru_RU")
+        dateFormatter.dateFormat = "dd MMMM yyyy"
+    }
 }

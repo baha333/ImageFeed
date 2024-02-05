@@ -5,8 +5,10 @@
 //  Created by Bakhadir on 28.11.2023.
 //
 
+import Foundation
 import UIKit
 import Kingfisher
+import WebKit
 
 final class ProfileViewController: UIViewController {
     
@@ -29,9 +31,12 @@ final class ProfileViewController: UIViewController {
     private let descriptionLabel = UILabel()
     
     private var profileImageServiceObserver: NSObjectProtocol?
+    private let splashViewController = SplashViewController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        view.backgroundColor = .ypBackground
         
         profileImageServiceObserver = NotificationCenter.default
             .addObserver(
@@ -100,8 +105,36 @@ final class ProfileViewController: UIViewController {
     }
     
     @objc
-    private func didTapButton() {
+    private func didTapButton(_ sender: Any?) {
+        let alert = UIAlertController(
+            title: "До свидания!",
+            message: "Уверены, что хотите выйти?",
+            preferredStyle: .alert)
+        
+        let acceptAction = UIAlertAction(
+            title: "Да",
+            style: .default) { [weak self] _ in
+                guard let self = self else { return }
+                self.logout()
+            }
+        
+        let deleteAction = UIAlertAction(
+            title: "Нет",
+            style: .default) { _ in
+                alert.dismiss(animated: true)
+            }
+        
+        alert.addAction(acceptAction)
+        alert.addAction(deleteAction)
+        self.present(alert, animated: true)
+    }
     
+    private func logout() {
+        OAuth2TokenStorage.shared.removeToken()
+        ProfileViewController.clean()
+        guard let window = UIApplication.shared.windows.first else { return assertionFailure("Invalid Configuration") }
+        window.rootViewController = SplashViewController()
+        window.makeKeyAndVisible()
     }
 }
 
@@ -127,5 +160,16 @@ extension ProfileViewController {
                                     options: [.processor(processor)])
         avatarImageView.layer.cornerRadius = 35
         avatarImageView.layer.masksToBounds = true
+    }
+}
+
+extension ProfileViewController {
+    static func clean() {
+        HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
+        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
+            records.forEach { record in
+                WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
+            }
+        }
     }
 }
