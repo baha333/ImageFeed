@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AC0956C02B724EED006E72C0 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0956BF2B724EED006E72C0 /* Array.swift */; };
 		AC186E4E2B40052E00D2802B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC186E4D2B40052E00D2802B /* Constants.swift */; };
 		AC186E512B402EB800D2802B /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC186E502B402EB800D2802B /* AuthViewController.swift */; };
 		AC186E532B40309C00D2802B /* WebViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC186E522B40309B00D2802B /* WebViewViewController.swift */; };
@@ -53,6 +54,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AC0956BF2B724EED006E72C0 /* Array.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
 		AC186E4D2B40052E00D2802B /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		AC186E502B402EB800D2802B /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
 		AC186E522B40309B00D2802B /* WebViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewController.swift; sourceTree = "<group>"; };
@@ -216,6 +218,7 @@
 				AC32382B2B5FB1DC003D9776 /* Colors.swift */,
 				AC32382D2B5FB228003D9776 /* Date.swift */,
 				ACBC93A62B62BB0900CA79C4 /* TabBarController.swift */,
+				AC0956BF2B724EED006E72C0 /* Array.swift */,
 			);
 			path = ImageFeed;
 			sourceTree = "<group>";
@@ -347,6 +350,7 @@
 				ACBC93A72B62BB0900CA79C4 /* TabBarController.swift in Sources */,
 				AC51C26D2B1640140059927F /* ProfileViewController.swift in Sources */,
 				AC8E1A0B2B45912D00FBC8C6 /* OAuth2TokenStorage.swift in Sources */,
+				AC0956C02B724EED006E72C0 /* Array.swift in Sources */,
 				AC8E1A152B4B296400FBC8C6 /* WebViewViewControllerDelegate.swift in Sources */,
 				AC186E512B402EB800D2802B /* AuthViewController.swift in Sources */,
 				AC186E4E2B40052E00D2802B /* Constants.swift in Sources */,

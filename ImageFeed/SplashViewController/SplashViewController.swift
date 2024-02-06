@@ -25,19 +25,6 @@ final class SplashViewController: UIViewController {
         
         if  let token = oauth2TokenStorage.token {
             fetchProfile(token)
-//            {
-//                [weak self] result in
-//                guard let self else { return }
-//                switch result {
-//                case .success(let profile):
-//                    ProfileImageService.shared.fetchProfileImageURL(username: profile.username ) { _ in }
-//                    switchToTabBarController()
-//                case .failure(let error):
-//                    UIBlockingProgressHUD.dismiss()
-//                    showAlert()
-//                    print("\(error)")
-//                }
-//            }
         } else {
             showAuthViewController()
         }
@@ -76,8 +63,7 @@ extension SplashViewController: AuthViewControllerDelegate {
     
     private func switchToTabBarController() {
     
-        guard let window = UIApplication.shared.windows.first else { fatalError("Invalid Configuration")
-        }
+        guard let window = UIApplication.shared.windows.first else { fatalError("Invalid Configuration") }
         
         let tabBarController = UIStoryboard(name: "Main", bundle: .main)
             .instantiateViewController(withIdentifier: "TabBarViewController")

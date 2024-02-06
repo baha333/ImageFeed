@@ -73,6 +73,11 @@ extension ImagesListViewController {
         if let date = imagesListService.photos[indexPath.row].createdAt {
             cell.dateLabel.text = dateFormatter.string(from: date as Date).replacingOccurrences(of: "r.", with: "")
         }
+        
+        let isLiked = imagesListService.photos[indexPath.row].isLiked == false
+        let likeImage = isLiked ? UIImage(named: "like_button_off") : UIImage(named: "like_button_on")
+        cell.likeButton.setImage(likeImage, for: .normal)
+        cell.selectionStyle = .none
     }
 }
 
@@ -122,6 +127,28 @@ extension ImagesListViewController: ImagesListCellDelegate {
         else { return }
         let photo = photos[indexPath.row]
         UIBlockingProgressHUD.show()
+        imagesListService.changeLike(photoId: photo.id, isLike: photo.isLiked) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case.success:
+                    self.photos = self.imagesListService.photos
+                    cell.setIsLiked(isLiked: self.photos[indexPath.row].isLiked)
+                    UIBlockingProgressHUD.dismiss()
+                case.failure(let error):
+                    UIBlockingProgressHUD.dismiss()
+                    self.showLikeErrorAlert(with: error)
+                }
+            }
+        }
+    }
+    
+    private func showLikeErrorAlert(with error: Error) {
+        let alert = UIAlertController(
+            title: "Что-то пошло не так!",
+            message: "Не удалось поставить лайк",
+            preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .cancel))
+        self.present(alert, animated: true, completion: nil)
     }
 }
 

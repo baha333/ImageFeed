@@ -52,6 +52,57 @@ final class ImagesListService {
         self.task = task
         task.resume()
     }
+    
+    func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
+        assert(Thread.isMainThread)
+        task?.cancel()
+        
+        guard let token = oauth2TokenStorage.token else { return }
+        var request: URLRequest?
+        if isLike {
+            request = deleteLikeRequest(token, photoId: photoId)
+        } else {
+            request = likeRequest(token, photoId: photoId)
+        }
+        
+        guard let request = request else { return }
+        let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<LikePhotoResult, Error>) in
+            guard let self = self else { return }
+            self.task = nil
+            switch result {
+            case .success(let photoResult):
+                DispatchQueue.main.async {
+                    if let index = self.photos.firstIndex(where: { $0.id == photoResult.photo?.id}) {
+                        let photo = self.photos[index]
+                        let newPhoto = Photo(id: photo.id,
+                                             width: photo.width,
+                                             height: photo.height,
+                                             createdAt: photo.createdAt,
+                                             welcomeDescription: photo.welcomeDescription,
+                                             thumbImageURL: photo.thumbImageURL, largeImageURL: photo.largeImageURL, isLiked: !photo.isLiked)
+                        self.photos = self.photos.withReplaced(itemAt: index, newValue: newPhoto)
+                    }
+                }
+                completion(.success(()))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+        self.task = task
+        task.resume()
+    }
+
+    func likeRequest(_ token: String, photoId: String) -> URLRequest? {
+        var request = URLRequest.makeHTTPRequest(path: "photos/\(photoId)/like", httpMethod: "POST", baseURL: DefaultBaseApiUrl)
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        return request
+    }
+
+    func deleteLikeRequest(_ token: String, photoId: String) -> URLRequest? {
+        var request = URLRequest.makeHTTPRequest(path: "photos/\(photoId)/like", httpMethod: "DELETE", baseURL: DefaultBaseApiUrl)
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        return request
+    }
 }
 
 private extension ImagesListService {
