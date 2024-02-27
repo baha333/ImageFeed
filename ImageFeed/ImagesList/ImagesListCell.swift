@@ -5,6 +5,7 @@
 //  Created by Bakhadir on 26.11.2023.
 //
 
+import Foundation
 import UIKit
 
 protocol ImagesListCellDelegate: AnyObject {
@@ -12,25 +13,29 @@ protocol ImagesListCellDelegate: AnyObject {
 }
 
 final class ImagesListCell: UITableViewCell {
-    static let reuseIdentifier = "ImagesListCell"
     weak var delegate: ImagesListCellDelegate?
-    
-    @IBOutlet var cellImage: UIImageView!
+    // MARK: - IB Outlets
+    @IBOutlet var photoImage: UIImageView!
     @IBOutlet var likeButton: UIButton!
     @IBOutlet var dateLabel: UILabel!
     
-    @IBAction func likeButtonTapped(_ sender: UIButton) {
+    @IBAction func like(_ sender: Any) {
         delegate?.imageListCellDidTapLike(self)
     }
+    // MARK: - Public Properties
+    static let reuseIdentifier = "ImagesListCell"
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        cellImage.kf.cancelDownloadTask()
+        photoImage.kf.cancelDownloadTask()
     }
     
-    public func setIsLiked(isLiked: Bool) {
-        let likeImage = isLiked ? UIImage(named: "like_button_on") : UIImage(named: "like_button_off")
-        likeButton.imageView?.image = likeImage
-        likeButton.setImage(likeImage, for: .normal)
+    func setIsLiked(isLiked: Bool) {
+        if isLiked {
+             self.likeButton.imageView?.image = UIImage(named: "LikeActive")
+         } else {
+             self.likeButton.imageView?.image = UIImage(named: "LikeNoActive")
+         }
     }
 }
+

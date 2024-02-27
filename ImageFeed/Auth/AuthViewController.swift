@@ -5,22 +5,25 @@
 //  Created by Bakhadir on 30.12.2023.
 //
 
+import Foundation
 import UIKit
 
+protocol AuthViewControllerDelegate: AnyObject {
+    func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String)
+}
+
 final class AuthViewController: UIViewController {
-    private let ShowWebViewSegueIdentifier = "ShowWebView"
+    // MARK: - Public Properties
+    private let showWebViewSegueIdentifier = "ShowWebView"
     
     weak var delegate: AuthViewControllerDelegate?
     
-    @IBOutlet private var loginButton: UIButton!
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier ==  ShowWebViewSegueIdentifier {
-            guard let webViewViewController = segue.destination as? WebViewViewController
-            else { assertionFailure("Failed to prepare for \(ShowWebViewSegueIdentifier)")
-                return
+        if segue.identifier == showWebViewSegueIdentifier {
+            guard let webViewViewController = segue.destination as? WebViewViewController else {
+                fatalError("Failed to prepare for \(showWebViewSegueIdentifier)")
             }
-        webViewViewController.delegate = self
+            webViewViewController.delegate = self
         } else {
             super.prepare(for: segue, sender: sender)
         }
@@ -36,3 +39,4 @@ extension AuthViewController: WebViewViewControllerDelegate {
         dismiss(animated: true)
     }
 }
+
