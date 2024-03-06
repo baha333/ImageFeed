@@ -5,45 +5,51 @@
 //  Created by Bakhadir on 21.01.2024.
 //
 
+
 import Foundation
 
 final class ProfileImageService {
-    private(set) var avatarURL: String?
-    private var task: URLSessionTask?
-    private var lastUsername: String?
-    static let DidChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
     static let shared = ProfileImageService()
+    static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
+    private let urlSession = URLSession.shared
+    private (set) var avatarURL: String?
+    private var task: URLSessionTask?
     
+    private init() {}
+   
     func fetchProfileImageURL(username: String, completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
+        guard task == nil else {return}
+        var request = URLRequest.makeHTTPRequest(path: "/users/\(username)", httpMethod: "GET")
+        request.setValue("Bearer \(OAuth2TokenStorage().token!)", forHTTPHeaderField: "Authorization")
         
-        guard let token = OAuth2TokenStorage().token else { return }
-        
-        if lastUsername == username { return }
-        task?.cancel()
-        lastUsername = username
-        
-        let request = URLRequest.makeHTTPRequest(httpMethod: "GET", token: token, pathURL: "/users/\(username)")
-        
-        let session = URLSession.shared
-        let task = session.objectTask(for: request) { [weak self] (result: Result<UserResult, Error>) in
+        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<UserResult, Error>) in
+            guard let self = self else { return }
             switch result {
-            case .success(let responseObject):
-                self?.avatarURL = responseObject.profileImage.small
-                completion(.success(responseObject.profileImage.small!))
+            case .success(let userResult):
+                self.avatarURL = userResult.profileImage["large"]
+                completion(.success(self.avatarURL!))
                 NotificationCenter.default
                     .post(
-                        name: ProfileImageService.DidChangeNotification,
+                        name: ProfileImageService.didChangeNotification,
                         object: self,
-                        userInfo: ["URL": self?.avatarURL as Any])
+                        userInfo: ["URL": self.avatarURL!])
             case .failure(let error):
+                self.task = nil
                 completion(.failure(error))
-                self?.lastUsername = nil
+                
             }
         }
-        
         self.task = task
         task.resume()
+    }
+}
+
+// MARK: - Extensions ProfileImageService
+
+extension ProfileImageService {
+  private struct UserResult: Codable {
+      var profileImage: [String: String]
     }
 }
 

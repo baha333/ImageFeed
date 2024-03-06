@@ -11,23 +11,30 @@ struct PhotoResult: Decodable {
     let id: String
     let width: Int
     let height: Int
-    let createdAt: String
+    let createdAt: String?
+    let description: String?
+    let urls: UrlsResult
+    let likedByUser: Bool
+}
+
+struct UrlsResult: Decodable {
+    let raw: String
+    let full: String
+    let regular: String
+    let small: String
+    let thumb: String
+    
+}
+
+public struct Photo {
+    let id: String
+    let size: CGSize
+    let createdAt: Date?
     let welcomeDescription: String?
-    let isLiked: Bool
-    let imageURL: URLS
-    
-    enum CodingKeys: String, CodingKey {
-        case id
-        case width
-        case height
-        case createdAt = "created_at"
-        case welcomeDescription = "description"
-        case isLiked = "liked_by_user"
-        case imageURL = "urls"
-    }
-    
-    struct URLS: Codable {
-        let thumb: String
-        let full: String
-    }
+    let thumbImageURL: String
+    let largeImageURL: String
+    var isLiked: Bool
+}
+
+struct Like: Decodable {
 }

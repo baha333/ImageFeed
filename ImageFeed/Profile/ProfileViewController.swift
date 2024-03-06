@@ -5,124 +5,126 @@
 //  Created by Bakhadir on 28.11.2023.
 //
 
-import Foundation
 import UIKit
 import Kingfisher
-import WebKit
 
-final class ProfileViewController: UIViewController {
+
+public protocol ProfileViewControllerProtocol: AnyObject {
+    var presenter: ProfilePresenterProtocol? { get set }
+    var avatarView: UIImageView { get set }
+    func loadAvatar(url: URL)
+    func showAlert(alert: UIAlertController)
+    func dismiss()
+}
+
+final class ProfileViewController: UIViewController, ProfileViewControllerProtocol {
     private let profileService = ProfileService.shared
-    private let profileImageService = ProfileImageService.shared
-    private var profileImageServiceObserver: NSObjectProtocol?
-    private let profilePhoto = UIImageView()
-    private let nameLabel = UILabel()
-    private let loginNameLabel = UILabel()
-    private let bioLabel = UILabel()
+    private var nameLabelVar: UILabel?
+    private var loginLabelVar: UILabel?
+    var avatarView = UIImageView(frame: CGRect(x: 0, y: 0, width: 70, height: 70))
+    var presenter: ProfilePresenterProtocol?
     
-    // MARK: - Overrides Methods
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        createProfileScreen()
         
-        profileImageServiceObserver = NotificationCenter.default
-            .addObserver(
-                forName: ProfileImageService.DidChangeNotification,
-                object: nil,
-                queue: .main
-            ) { [weak self] _ in
-                guard let self = self else { return }
-                self.updateAvatar()
-            }
-        updateAvatar()
-        updateProfileData()
-    }
-    
-    // MARK: - Private Methods
-    private func createProfileScreen(){
+        presenter = ProfilePresenter(view: self)
+        presenter?.viewDidLoad()
+        
+        guard let profile = profileService.profile else {return}
+        
         view.backgroundColor = UIColor(named: "YP Black")
-        let exitButton = UIButton.systemButton(
-            with: UIImage(named: "exit")!,
-            target: self,
-            action: #selector(Self.didTapButton)
-        )
-        
-        view.addSubview(profilePhoto)
-        view.addSubview(nameLabel)
-        view.addSubview(loginNameLabel)
-        view.addSubview(bioLabel)
-        view.addSubview(exitButton)
-        
-        profilePhoto.translatesAutoresizingMaskIntoConstraints = false
+        createAvatarView()
+        createNameLabel(profile.name)
+        createLoginLabel(profile.loginName)
+        createDescriptionLabel(profile.bio)
+        createLogoutButton()
+    }
+    
+    // MARK: - Private func
+    
+    private func createAvatarView() {
+        avatarView.layer.cornerRadius = 35
+        avatarView.layer.masksToBounds = true
+        avatarView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(avatarView)
+        avatarView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32).isActive = true
+        avatarView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
+        avatarView.heightAnchor.constraint(equalToConstant: 70).isActive = true
+        avatarView.widthAnchor.constraint(equalToConstant: 70).isActive = true
+    }
+    
+    private func createNameLabel(_ name: String) {
+        let nameLabel = UILabel()
+        nameLabel.text = name
+        nameLabel.textColor = UIColor(named: "YP White")
+        nameLabel.font = .boldSystemFont(ofSize: 23)
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        loginNameLabel.translatesAutoresizingMaskIntoConstraints = false
-        bioLabel.translatesAutoresizingMaskIntoConstraints = false
-        exitButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        profilePhoto.backgroundColor = UIColor(named: "YP Black")
-        profilePhoto.clipsToBounds = true
-        profilePhoto.layer.masksToBounds = true
-        profilePhoto.layer.cornerRadius = 35
-        nameLabel.textColor = .white
-        nameLabel.font = UIFont.boldSystemFont(ofSize: 23)
-        loginNameLabel.textColor = UIColor(named: "YP Grey")
-        loginNameLabel.font = UIFont.systemFont(ofSize: 13)
-        bioLabel.textColor = .white
-        bioLabel.font = UIFont.systemFont(ofSize: 13)
-        exitButton.backgroundColor = UIColor(named: "YP Black")
-        exitButton.tintColor = UIColor(named: "YP Red")
-        
-        NSLayoutConstraint.activate([
-            profilePhoto.widthAnchor.constraint(equalToConstant: 70),
-            profilePhoto.heightAnchor.constraint(equalToConstant: 70),
-            profilePhoto.topAnchor.constraint(equalTo: view.topAnchor, constant: 76),
-            profilePhoto.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            nameLabel.topAnchor.constraint(equalTo: profilePhoto.bottomAnchor, constant: 8),
-            nameLabel.leadingAnchor.constraint(equalTo: profilePhoto.leadingAnchor),
-            loginNameLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8),
-            loginNameLabel.leadingAnchor.constraint(equalTo: profilePhoto.leadingAnchor),
-            bioLabel.topAnchor.constraint(equalTo: loginNameLabel.bottomAnchor, constant: 8),
-            bioLabel.leadingAnchor.constraint(equalTo: profilePhoto.leadingAnchor),
-            exitButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            exitButton.centerYAnchor.constraint(equalTo: profilePhoto.centerYAnchor),
-            exitButton.heightAnchor.constraint(equalToConstant: 44),
-            exitButton.widthAnchor.constraint(equalToConstant: 44)
-        ])
+        view.addSubview(nameLabel)
+        nameLabel.topAnchor.constraint(equalTo: self.avatarView.bottomAnchor, constant: 8).isActive = true
+        nameLabel.leadingAnchor.constraint(equalTo: avatarView.leadingAnchor).isActive = true
+        nameLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
+        self.nameLabelVar = nameLabel
     }
     
-    private func updateAvatar() {
-        guard
-            let profileImageURL = profileImageService.avatarURL,
-            let url = URL(string: profileImageURL)
-        else { return }
-        let processor = RoundCornerImageProcessor(cornerRadius: 61)
-        profilePhoto.kf.indicatorType = .activity
-        profilePhoto.kf.setImage(with: url,
-                                 options: [.processor(processor)])
+    private func createLoginLabel(_ login: String) {
+        let loginLabel = UILabel()
+        loginLabel.text = login
+        loginLabel.textColor = UIColor(named: "YP Gray")
+        loginLabel.font = .systemFont(ofSize: 13)
+        loginLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(loginLabel)
+        loginLabel.topAnchor.constraint(equalTo: nameLabelVar!.bottomAnchor, constant: 8).isActive = true
+        loginLabel.leadingAnchor.constraint(equalTo: nameLabelVar!.leadingAnchor).isActive = true
+        loginLabel.trailingAnchor.constraint(equalTo: nameLabelVar!.trailingAnchor).isActive = true
+        self.loginLabelVar = loginLabel
     }
     
-    private func updateProfileData() {
-        nameLabel.text = profileService.profile?.name
-        loginNameLabel.text = profileService.profile?.loginName
-        bioLabel.text = profileService.profile?.bio
+    private func createDescriptionLabel(_ bio: String) {
+        let descriptionLabel = UILabel()
+        descriptionLabel.text = bio
+        descriptionLabel.textColor = UIColor(named: "YP White")
+        descriptionLabel.font = .systemFont(ofSize: 13)
+        descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(descriptionLabel)
+        descriptionLabel.topAnchor.constraint(equalTo: loginLabelVar!.bottomAnchor, constant: 8).isActive = true
+        descriptionLabel.leadingAnchor.constraint(equalTo: nameLabelVar!.leadingAnchor).isActive = true
+        descriptionLabel.trailingAnchor.constraint(equalTo: nameLabelVar!.trailingAnchor).isActive = true
+    }
+    
+    private func createLogoutButton() {
+        let logoutButton = UIButton()
+        logoutButton.setImage(UIImage(named: "Logout Button"), for: .normal)
+        logoutButton.addTarget(self, action: #selector(Self.didTapLogoutButton), for: UIControl.Event.touchUpInside)
+        logoutButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(logoutButton)
+        logoutButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 55).isActive = true
+        logoutButton.leadingAnchor.constraint(greaterThanOrEqualTo: avatarView.trailingAnchor).isActive = true
+        logoutButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
+        logoutButton.accessibilityIdentifier = "Logout"
     }
     
     @objc
-    private func didTapButton() {
-        let alert = UIAlertController(title: "Пока, Пока!", message: "Уверены, что хотите выйти?", preferredStyle: .alert)
-        let doingAction = UIAlertAction(title: "Да", style: .default) { [weak self] _ in
-            guard let self = self else {return}
-            HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
-            WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
-                records.forEach { record in
-                    WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
-                }
-            }
-            OAuth2TokenStorage().deleteToken()
-            let window = UIApplication.shared.windows.first
-            window?.rootViewController = SplashViewController()
-        }
-        alert.addAction(UIAlertAction(title: "Нет", style: .cancel, handler: nil))
-        alert.addAction(doingAction)
-        present(alert, animated: true, completion: nil)
+    private func didTapLogoutButton() {
+        presenter?.makeAlert()
+    }
+    
+    // MARK: - Internal func
+    
+    func loadAvatar(url: URL) {
+        avatarView.kf.indicatorType = .activity
+        let processor = RoundCornerImageProcessor(cornerRadius: 40)
+        avatarView.kf.setImage(
+            with: url,
+            placeholder: UIImage(named: "userpickStub"),
+            options: [.processor(processor)])
+    }
+    
+    func showAlert(alert: UIAlertController) {
+        self.present(alert, animated: true)
+    }
+    
+    func dismiss() {
+        self.dismiss(animated: true)
     }
 }
